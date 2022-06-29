@@ -81,6 +81,7 @@ void ReadDeviceInfo( char * device_info )
     }
 
     if(is_all || (strcmp(device_info, "device_mode") == 0))
+    /* return: the actually get size on successful */
     if(ef_get_env_blob("device_mode", &device_mode, sizeof(device_mode), NULL) == 0){
         device_mode = MODE_BLE;
         SaveDeviceInfo("device_mode");

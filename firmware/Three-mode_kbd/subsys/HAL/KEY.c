@@ -42,8 +42,10 @@ void HAL_KeyInit( void )
   halKeySavedKeys = 0;
   /* Initialize callback function */
   pHalKeyProcessFunction  = NULL;
+  /* 设置PB22上拉输入 */
   KEY1_DIR;
   KEY1_PU;
+  /* 设置PB4上拉输入 */
   KEY2_DIR;
   KEY2_PU;
 }

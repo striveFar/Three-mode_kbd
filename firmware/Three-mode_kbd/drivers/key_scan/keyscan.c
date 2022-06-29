@@ -46,6 +46,7 @@ void keyInit(void)
     GPIOA_ModeCfg(
     GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5,
             GPIO_ModeIN_PU);
+    /* PA8用作CL10 */
     GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeOut_PP_5mA);
     GPIOB_ModeCfg(
              GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 |
@@ -59,6 +60,9 @@ const uint32_t IOmap[] = {1<<4, 1<<5, 1<<6, 1<<7, 1<<14, 1<<15, 1<<16, 1<<17, 1<
 
 void RstAllPins(void)
 {
+    /* PA8用作CL10，对应于IOmap[10]
+     * 将列全部输出低
+     */
     for(uint8_t i = 0; i < 17; i++){
           i == 10 ? GPIOA_ResetBits(IOmap[i]): GPIOB_ResetBits(IOmap[i]);
     }

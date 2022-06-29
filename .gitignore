@@ -1,12 +1,13 @@
 # Prerequisites
 *.d
+*.swp
 
 # Object files
 *.o
 *.ko
 *.obj
 *.elf
-
+firmware/Three-mode_kbd/APP/obj
 # Linker output
 *.ilk
 *.map

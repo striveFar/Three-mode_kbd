@@ -8,7 +8,8 @@
  extern "C" {
 #endif
 
-	 
+#include "../StdPeriphDriver/inc/CH58x_common.h"
+
 /**
   * @brief  rtc interrupt event define
   */

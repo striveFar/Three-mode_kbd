@@ -2,6 +2,7 @@
 #define DEBUG_H_
 
 #include "stdio.h"
+#include "../keyboard/custom_config.h"
 
 void log_debug( const char *file, const long line, const char *format, ... );
 void log_info( const char *format, ... );

@@ -17,7 +17,10 @@
 
 #include "RF_PHY/rf_AC.h"
 #include "I2C/myi2c.h"
-
+#include "../../drivers/tmk_core/common/host_driver.h"
+#include "../../drivers/tmk_core/common/host.h"
+#include "../../drivers/tmk_core/common/keyboard.h"
+#include "host_adaptive.h"
 
 bool isUSBinsert = false;
 /*********************************************************************
@@ -82,6 +85,10 @@ int main(void)
         isUSBinsert = false;
         PRINT("NO USB\n");
     }
+
+    host_set_driver(&consumer_host_driver);
+    //TODO
+    //keyboard_init();
 
     /*DataFlash≥ı ºªØ*/
     if (easyflash_init() != SUCCESS) {

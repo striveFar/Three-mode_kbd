@@ -1,2 +1,3 @@
 eclipse.preferences.version=1
+encoding//drivers/tmk_core/common/eeconfig.h=UTF-8
 encoding//subsys/BLE/profile/hidkbdservice.c=UTF-8

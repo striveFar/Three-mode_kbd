@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>Three-mode_kbd</name>
-	<comment/>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -82,8 +82,8 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1634107254788</id>
-			<name/>
+			<id>1656920217797</id>
+			<name></name>
 			<type>22</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>

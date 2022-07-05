@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EECONFIG_MAGIC_NUMBER                       (uint16_t)0xFEED
 
 /* eeprom parameteter address */
+/*
 #define EECONFIG_MAGIC                              (uint16_t *)0
 #define EECONFIG_DEBUG                              (uint8_t *)2
 #define EECONFIG_DEFAULT_LAYER                      (uint8_t *)3
@@ -42,7 +43,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EECONFIG_MAX EECONFIG_SEND_MODE
 // Size of EEPROM being used, other code can refer to this for available EEPROM
 #define EECONFIG_SIZE 17
+*/
 
+#define EECONFIG_MAGIC              		    "EECONFIG_MAGIC"               
+#define EECONFIG_DEBUG              		    "EECONFIG_DEBUG"               
+#define EECONFIG_DEFAULT_LAYER      		    "EECONFIG_DEFAULT_LAYER"       
+#define EECONFIG_KEYMAP             		    "EECONFIG_KEYMAP"       
+#define EECONFIG_MOUSEKEY_ACCEL     		    "EECONFIG_MOUSEKEY_ACCEL"
+#define EECONFIG_BACKLIGHT          		    "EECONFIG_BACKLIGHT" 
+#define EECONFIG_AUDIO              		    "EECONFIG_AUDIO" 
+#define EECONFIG_RGBLIGHT           		    "EECONFIG_RGBLIGHT" 
+#define EECONFIG_UNICODEMODE        		    "EECONFIG_UNICODEMODE" 
+#define EECONFIG_STENOMODE          		    "EECONFIG_STENOMODE" 
+// EEHANDS for two handed boards
+#define EECONFIG_HANDEDNESS                         "EECONFIG_HANDEDNESS"
+#define EECONFIG_OS_CYCLE                           "EECONFIG_OS_CYCLE" 
+#define EECONFIG_SEND_MODE                          "EECONFIG_SEND_MODE"
+#define EECONFIG_MAX EECONFIG_SEND_MODE             "EECONFIG_MAX EECONFIG_SEND_MODE"
+// Size of EEPROM being used, other code can refer to this for available EEPROM
+#define EECONFIG_SIZE 17
 /* debug bit */
 #define EECONFIG_DEBUG_ENABLE                       (1<<0)
 #define EECONFIG_DEBUG_MATRIX                       (1<<1)

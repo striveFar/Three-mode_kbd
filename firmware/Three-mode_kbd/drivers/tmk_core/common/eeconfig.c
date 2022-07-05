@@ -8,102 +8,111 @@
  *
  * FIXME: needs doc
  */
-void eeconfig_init(void)
-{
-    eeprom_update_word(EECONFIG_MAGIC,          EECONFIG_MAGIC_NUMBER);
-    eeprom_update_byte(EECONFIG_DEBUG,          0);
-    eeprom_update_byte(EECONFIG_DEFAULT_LAYER,  0);
-    eeprom_update_byte(EECONFIG_KEYMAP,         0);
+void eeconfig_init(void) {
+    eeprom_update_word((uint16_t *) EECONFIG_MAGIC, EECONFIG_MAGIC_NUMBER);
+    eeprom_update_byte(EECONFIG_DEBUG, 0);
+    eeprom_update_byte(EECONFIG_DEFAULT_LAYER, 0);
+    eeprom_update_byte(EECONFIG_KEYMAP, 0);
     eeprom_update_byte(EECONFIG_MOUSEKEY_ACCEL, 0);
 #ifdef BACKLIGHT_ENABLE
-    eeprom_update_byte(EECONFIG_BACKLIGHT,      0);
+    eeprom_update_byte(EECONFIG_BACKLIGHT, 0);
 #endif
 #ifdef AUDIO_ENABLE
-    eeprom_update_byte(EECONFIG_AUDIO,             0xFF); // On by default
+    eeprom_update_byte(EECONFIG_AUDIO, 0xFF); // On by default
 #endif
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
-    eeprom_update_dword(EECONFIG_RGBLIGHT,      0);
+    eeprom_update_dword(EECONFIG_RGBLIGHT, 0);
 #endif
 #ifdef STENO_ENABLE
-    eeprom_update_byte(EECONFIG_STENOMODE,      0);
+    eeprom_update_byte(EECONFIG_STENOMODE, 0);
 #endif
 #ifdef OS_CYCLE
-    eeprom_update_byte(EECONFIG_OS_CYCLE,      0);
+    eeprom_update_byte(EECONFIG_OS_CYCLE, 0);
 #endif
-    eeprom_update_byte(EECONFIG_SEND_MODE,      0);
+    eeprom_update_byte(EECONFIG_SEND_MODE, 0);
 }
 
 /** \brief eeconfig enable
  *
  * FIXME: needs doc
  */
-void eeconfig_enable(void)
-{
-    eeprom_update_word(EECONFIG_MAGIC, EECONFIG_MAGIC_NUMBER);
+void eeconfig_enable(void) {
+    eeprom_update_word((uint16_t *) EECONFIG_MAGIC, EECONFIG_MAGIC_NUMBER);
 }
 
 /** \brief eeconfig disable
  *
  * FIXME: needs doc
  */
-void eeconfig_disable(void)
-{
-    eeprom_update_word(EECONFIG_MAGIC, 0xFFFF);
+void eeconfig_disable(void) {
+    eeprom_update_word((uint16_t *) EECONFIG_MAGIC, 0xFFFF);
 }
 
 /** \brief eeconfig is enabled
  *
  * FIXME: needs doc
  */
-bool eeconfig_is_enabled(void)
-{
-    return (eeprom_read_word(EECONFIG_MAGIC) == EECONFIG_MAGIC_NUMBER);
+bool eeconfig_is_enabled(void) {
+    return (eeprom_read_word((uint16_t *) EECONFIG_MAGIC)
+            == EECONFIG_MAGIC_NUMBER );
 }
 
 /** \brief eeconfig read debug
  *
  * FIXME: needs doc
  */
-uint8_t eeconfig_read_debug(void)      { return eeprom_read_byte(EECONFIG_DEBUG); }
+uint8_t eeconfig_read_debug(void) {
+    return eeprom_read_byte(EECONFIG_DEBUG);
+}
 /** \brief eeconfig update debug
  *
  * FIXME: needs doc
  */
-void eeconfig_update_debug(uint8_t val) { eeprom_update_byte(EECONFIG_DEBUG, val); }
+void eeconfig_update_debug(uint8_t val) {
+    eeprom_update_byte(EECONFIG_DEBUG, val);
+}
 
 /** \brief eeconfig read default layer
  *
  * FIXME: needs doc
  */
-uint8_t eeconfig_read_default_layer(void)      { return eeprom_read_byte(EECONFIG_DEFAULT_LAYER); }
+uint8_t eeconfig_read_default_layer(void) {
+    return eeprom_read_byte(EECONFIG_DEFAULT_LAYER);
+}
 /** \brief eeconfig update default layer
  *
  * FIXME: needs doc
  */
-void eeconfig_update_default_layer(uint8_t val) { eeprom_update_byte(EECONFIG_DEFAULT_LAYER, val); }
+void eeconfig_update_default_layer(uint8_t val) {
+    eeprom_update_byte(EECONFIG_DEFAULT_LAYER, val);
+}
 
 /** \brief eeconfig read keymap
  *
  * FIXME: needs doc
  */
-uint8_t eeconfig_read_keymap(void)      { return eeprom_read_byte(EECONFIG_KEYMAP); }
+uint8_t eeconfig_read_keymap(void) {
+    return eeprom_read_byte(EECONFIG_KEYMAP);
+}
 /** \brief eeconfig update keymap
  *
  * FIXME: needs doc
  */
-void eeconfig_update_keymap(uint8_t val) { eeprom_update_byte(EECONFIG_KEYMAP, val); }
+void eeconfig_update_keymap(uint8_t val) {
+    eeprom_update_byte(EECONFIG_KEYMAP, val);
+}
 
 #ifdef BACKLIGHT_ENABLE
 /** \brief eeconfig read backlight
  *
  * FIXME: needs doc
  */
-uint8_t eeconfig_read_backlight(void)      { return eeprom_read_byte(EECONFIG_BACKLIGHT); }
+uint8_t eeconfig_read_backlight(void) {return eeprom_read_byte(EECONFIG_BACKLIGHT);}
 /** \brief eeconfig update backlight
  *
  * FIXME: needs doc
  */
-void eeconfig_update_backlight(uint8_t val) { eeprom_update_byte(EECONFIG_BACKLIGHT, val); }
+void eeconfig_update_backlight(uint8_t val) {eeprom_update_byte(EECONFIG_BACKLIGHT, val);}
 #endif
 
 #ifdef AUDIO_ENABLE
@@ -111,30 +120,34 @@ void eeconfig_update_backlight(uint8_t val) { eeprom_update_byte(EECONFIG_BACKLI
  *
  * FIXME: needs doc
  */
-uint8_t eeconfig_read_audio(void)      { return eeprom_read_byte(EECONFIG_AUDIO); }
+uint8_t eeconfig_read_audio(void) {return eeprom_read_byte(EECONFIG_AUDIO);}
 /** \brief eeconfig update audio
  *
  * FIXME: needs doc
  */
-void eeconfig_update_audio(uint8_t val) { eeprom_update_byte(EECONFIG_AUDIO, val); }
+void eeconfig_update_audio(uint8_t val) {eeprom_update_byte(EECONFIG_AUDIO, val);}
 #endif
 
 #ifdef OS_CYCLE
 /** \brief eeconfig read os
  *
  */
-uint8_t eeconfig_read_os(void)      { return eeprom_read_byte(EECONFIG_OS_CYCLE); }
+uint8_t eeconfig_read_os(void) {return eeprom_read_byte(EECONFIG_OS_CYCLE);}
 /** \brief eeconfig update os
  *
  */
-void eeconfig_update_os(uint8_t val) { eeprom_update_byte(EECONFIG_OS_CYCLE, val); }
+void eeconfig_update_os(uint8_t val) {eeprom_update_byte(EECONFIG_OS_CYCLE, val);}
 #endif
 
 /** \brief eeconfig read send mode
  *
  */
-uint8_t eeconfig_read_send_mode(void)      { return eeprom_read_byte(EECONFIG_SEND_MODE); }
+uint8_t eeconfig_read_send_mode(void) {
+    return eeprom_read_byte(EECONFIG_SEND_MODE);
+}
 /** \brief eeconfig update send mode
  *
  */
-void eeconfig_update_send_mode(uint8_t val) { eeprom_update_byte(EECONFIG_SEND_MODE, val); }
+void eeconfig_update_send_mode(uint8_t val) {
+    eeprom_update_byte(EECONFIG_SEND_MODE, val);
+}

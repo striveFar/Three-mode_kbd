@@ -4,6 +4,8 @@
 #include "../../drivers/tmk_core/common/print.h"
 #include "../../drivers/tmk_core/common/debug.h"
 #include "../../drivers/tmk_core/common/host_driver.h"
+#include "HAL.h"
+#include "device_config.h"
 
 static uint8_t bluefruit_keyboard_leds = 0;
 
@@ -21,7 +23,21 @@ static uint8_t keyboard_leds(void) {
     return bluefruit_keyboard_leds;
 }
 static void send_keyboard(report_keyboard_t *report) {
+    switch(device_mode){
+           case MODE_BLE:
+               OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, 1, report);
+               break;
 
+           case MODE_RF24:
+               OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, 1, NULL);
+               break;
+
+           case MODE_USB:
+               OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, 1, NULL);
+               break;
+           default:
+               break;
+           }
 }
 static void send_mouse(report_mouse_t *report) {
 

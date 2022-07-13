@@ -38,7 +38,11 @@ extern "C"
 
 #define USB_MESSAGE              		0xB0    // USB message
 
-#define KEY_MESSAGE                 0xaa
+#define KEY_MESSAGE_KEYBOARD                0xaa
+#define KEY_MESSAGE_MOUSE                   0xab
+#define KEY_MESSAGE_SYSTEM                  0xac
+#define KEY_MESSAGE_CONSUMER                0xad
+
 #define RF_PAIR_MESSAGE             0x55
 
 

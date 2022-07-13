@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "debug.h"
 #include "action_util.h"
 #include "timer.h"
+#include "RingBuffer/lwrb.h"
 
 static inline void add_key_byte(uint8_t code);
 static inline void del_key_byte(uint8_t code);
@@ -69,6 +70,7 @@ void send_keyboard_report(void) {
         }
     }
 #endif
+    lwrb_write(&KEY_buff, keyboard_report, sizeof(report_keyboard_t));
     host_keyboard_send(keyboard_report);
 }
 

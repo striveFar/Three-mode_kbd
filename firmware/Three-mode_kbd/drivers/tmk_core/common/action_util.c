@@ -70,7 +70,6 @@ void send_keyboard_report(void) {
         }
     }
 #endif
-    lwrb_write(&KEY_buff, keyboard_report, sizeof(report_keyboard_t));
     host_keyboard_send(keyboard_report);
 }
 

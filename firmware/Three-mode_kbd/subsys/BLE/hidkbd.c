@@ -22,6 +22,7 @@
 
 #include "device_config.h"
 #include "backlight/backlight.h"
+#include "../../drivers/tmk_core/common/report.h"
 
 /*********************************************************************
  * MACROS
@@ -411,107 +412,115 @@ uint16 HidEmu_ProcessEvent(uint8 task_id, uint16 events) {
         uint8_t keyVal[16] = { 0 };
 
         if (lwrb_get_full(&KEY_buff)) {
-            lwrb_peek(&KEY_buff, 0, &report_id, 1);
+            lwrb_peek(&KEY_buff, 0, &report_id, sizeof(report_id));
 
-            if (report_id == KEYNORMAL_ID) {
-                lwrb_peek(&KEY_buff, 1, keyVal, 8);
+            if (report_id == KEYNORMAL_ID || report_id == KEYBIT_ID) {
+                report_keyboard_t report_kb;
+                lwrb_peek(&KEY_buff, sizeof(report_id), &report_kb,
+                        sizeof(report_kb));
+#ifdef DEBUG
                 PRINT("HID_RPT_ID_KEY_IN:[");
-                for (int i = 0; i < 8; i++) {
-                    if(i) PRINT(" ");
-                    PRINT("%#x", keyVal[i]);
+                for (int i = 0; i < KEYBOARD_REPORT_SIZE; i++) {
+                    if (i)
+                        PRINT(" ");
+                    PRINT("%#x", report_kb.raw[i]);
                 }
                 PRINT("]\n");
+#endif
                 uint8_t state = HidDev_Report( HID_RPT_ID_KEY_IN,
-                HID_REPORT_TYPE_INPUT, 8, keyVal);
+                HID_REPORT_TYPE_INPUT, sizeof(report_kb), (uint8*)&report_kb);
 
                 LOG_INFO("state=%#x", state);
                 switch (state) {
                 case bleNotReady:  //not connet
                 case SUCCESS:
-                    lwrb_skip(&KEY_buff, 8 + 1);
+                    lwrb_skip(&KEY_buff, sizeof(report_kb) + sizeof(report_id));
                     LOG_INFO("ble send success!");
                     break;
 
                 default:
                     break;
                 }
-            } else if (report_id == KEYBIT_ID) {
-                lwrb_peek(&KEY_buff, 1, keyVal, 16);
-                PRINT("HID_RPT_ID_KEYBIT_IN:[");
-                for (int i = 0; i < 15; i++) {
-                    if(i) PRINT(" ");
-                    PRINT("%#x", keyVal[i]);
-                }
-                PRINT("]\n");
-                uint8_t state = HidDev_Report( HID_RPT_ID_KEYBIT_IN,
-                HID_REPORT_TYPE_INPUT, 15, keyVal);
-                switch (state) {
-                case bleNotReady:  //not connet
-                case SUCCESS:
-                    lwrb_skip(&KEY_buff, 16 + 1);
-                    LOG_INFO( "ble send success!");
-                    break;
-
-                default:
-                    break;
-                }
-            } else if(report_id == SYS_ID) {
-                lwrb_peek(&KEY_buff, 1, keyVal, 2);
+            } else if (report_id == SYS_ID) {
+                uint16_t report_sys;
+                lwrb_peek(&KEY_buff, sizeof(report_id), &report_sys,
+                        sizeof(report_sys));
+#ifdef DEBUG
                 PRINT("HID_RPT_ID_SYS_IN:[");
-                for (int i = 0; i < 2; i++) {
-                    if(i) PRINT(" ");
-                    PRINT("%#x", keyVal[i]);
+                for (int i = 0; i < sizeof(report_sys); i++) {
+                    if (i)
+                        PRINT(" ");
+                    PRINT("%#x", report_sys);
                 }
                 PRINT("]\n");
+#endif
                 uint8_t state = HidDev_Report( HID_RPT_ID_SYS_IN,
-                HID_REPORT_TYPE_INPUT, 2, keyVal);
+                HID_REPORT_TYPE_INPUT, sizeof(report_sys), (uint8*)&report_sys);
 
                 switch (state) {
                 case bleNotReady:  //not connet
                 case SUCCESS:
-                    lwrb_skip(&KEY_buff, 2 + 1);
-                    LOG_INFO( "ble send success!");
+                    lwrb_skip(&KEY_buff, sizeof(report_sys) + sizeof(report_id));
+                    LOG_INFO("ble send success!");
                     break;
 
                 default:
                     break;
                 }
             } else if (report_id == CONSUME_ID) {
-                lwrb_peek(&KEY_buff, 1, keyVal, 2);
+                uint16_t report_consume;
+                lwrb_peek(&KEY_buff, sizeof(report_id), &report_consume,
+                        sizeof(report_consume));
+#ifdef DEBUG
                 PRINT("HID_RPT_ID_KEYCONSUME_IN:[");
-                for (int i = 0; i < 2; i++) {
-                    if(i) PRINT(" ");
-                    PRINT("%#x", keyVal[i]);
-                }
+                PRINT("%#x", report_consume);
                 PRINT("]\n");
+#endif
                 uint8_t state = HidDev_Report( HID_RPT_ID_KEYCONSUME_IN,
-                HID_REPORT_TYPE_INPUT, 2, keyVal);
+                HID_REPORT_TYPE_INPUT, sizeof(report_consume), (uint8 *)&report_consume);
                 switch (state) {
                 case bleNotReady:  //not connet
                 case SUCCESS:
-                    lwrb_skip(&KEY_buff, 2 + 1);
+                    lwrb_skip(&KEY_buff, sizeof(report_consume) + sizeof(report_id));
                     LOG_INFO( "ble send success!");
                     break;
 
                 default:
                     break;
                 }
-            } else if (report_id == VENDOR_ID) {
-
             } else if (report_id == MOUSE_ID) {
-                lwrb_peek(&KEY_buff, 1, keyVal, 4);
-                PRINT("HID_RPT_ID_KEYCONSUME_IN:[");
-                for (int i = 0; i < 2; i++) {
-                    if(i) PRINT(" ");
-                    PRINT("%#x", keyVal[i]);
-                }
+                report_mouse_t report_mouse;
+                lwrb_peek(&KEY_buff, sizeof(report_id), &report_mouse, sizeof(report_mouse));
+#if DEBUG
+                PRINT("HID_RPT_ID_MOUSE_IN:[");
+    #ifndef MOUSE_EXT_REPORT
+                PRINT("buttons: %#x", report_mouse.buttons);
+                PRINT(" ");
+                PRINT("x: %#x", report_mouse.x);
+                PRINT(" ");
+                PRINT("y: %#x", report_mouse.y);
+    #else
+                PRINT(" ");
+                PRINT("boot_x: %#x", report_mouse.boot_x);
+                PRINT(" ");
+                PRINT("boot_y: %#x", report_mouse.boot_y);
+                PRINT(" ");
+                PRINT("x: %#x", report_mouse.x);
+                PRINT(" ");
+                PRINT("y: %#x", report_mouse.y);
+    #endif
+                PRINT(" ");
+                PRINT("v: %#x", report_mouse.v);
+                PRINT(" ");
+                PRINT("h: %#x", report_mouse.h);
                 PRINT("]\n");
+#endif
                 uint8_t state = HidDev_Report( HID_RPT_ID_MOUSE_IN,
-                HID_REPORT_TYPE_INPUT, 4, keyVal);
+                HID_REPORT_TYPE_INPUT, sizeof(report_mouse), (uint8 *)&report_mouse);
                 switch (state) {
                 case bleNotReady:  //not connet
                 case SUCCESS:
-                    lwrb_skip(&KEY_buff, 2 + 1);
+                    lwrb_skip(&KEY_buff, sizeof(report_mouse) + sizeof(report_id));
                     LOG_INFO( "ble send success!");
                     break;
 

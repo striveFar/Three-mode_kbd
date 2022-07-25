@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         Infinitiy
 #define DESCRIPTION     Massdrop Infinity keyboard firmware by tmk
 
+#define NKRO_EPSIZE 32
+
 
 /* matrix size */
 #define MATRIX_ROWS 9   // Strobe

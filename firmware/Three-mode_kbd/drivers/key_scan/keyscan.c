@@ -230,7 +230,7 @@ bool SpecialKey(uint8_t *keyval)             //Fn¼ü
             PRINT("FN+5\n");
             if (device_mode == MODE_RF24) {
                 PRINT("Pair function enable.\n");
-                OnBoard_SendMsg(RFtaskID, RF_PAIR_MESSAGE, 1, NULL);
+                OnBoard_SendMsg(RFtaskID, RF_PAIR_MESSAGE, notify, NULL);
             }
             break;
         case 0x27:      //FN+0

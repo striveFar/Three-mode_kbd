@@ -55,17 +55,20 @@ extern "C"
  */
 extern tmosTaskID halTaskID;
 
-typedef struct  tag_uart_package
-{
-  tmos_event_hdr_t hdr;
-  uint8            *pData;
+typedef struct tag_uart_package {
+    tmos_event_hdr_t hdr;
+    uint8 *pData;
 } uartPacket_t;
 
-typedef struct  SendMSG
-{
-  tmos_event_hdr_t hdr;
-  void            *pData;
+typedef struct SendMSG {
+    tmos_event_hdr_t hdr;
+    void *pData;
 } SendMSG_t;
+
+enum report_state {
+    unotify,
+    notify,
+};
 
 /*********************************************************************
  * GLOBAL FUNCTIONS

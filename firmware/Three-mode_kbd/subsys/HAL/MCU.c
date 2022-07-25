@@ -3,11 +3,11 @@
  * Author             : WCH
  * Version            : V1.1
  * Date               : 2019/11/05
- * Description        : Ó²¼þÈÎÎñ´¦Àíº¯Êý¼°BLEºÍÓ²¼þ³õÊ¼»¯
+ * Description        : Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BLEï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
  *******************************************************************************/
 
 /******************************************************************************/
-/* Í·ÎÄ¼þ°üº¬ */
+/* Í·ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ */
 #include <USB_task/USB_kbd.h>
 #include "CH58x_common.h"
 #include "HAL.h"
@@ -27,7 +27,7 @@ bool is_idle = false;
 /*******************************************************************************
  * @fn          Lib_Calibration_LSI
  *
- * @brief       ÄÚ²¿32kÐ£×¼
+ * @brief       ï¿½Ú²ï¿½32kÐ£×¼
  *
  * input parameters
  *
@@ -51,7 +51,7 @@ void Lib_Calibration_LSI( void )
 /*******************************************************************************
  * @fn          Lib_Read_Flash
  *
- * @brief       Lib ²Ù×÷Flash»Øµ÷
+ * @brief       Lib ï¿½ï¿½ï¿½ï¿½Flashï¿½Øµï¿½
  *
  * input parameters
  *
@@ -74,7 +74,7 @@ u32 Lib_Read_Flash( u32 addr, u32 num, u32 *pBuf )
 /*******************************************************************************
  * @fn          Lib_Write_Flash
  *
- * @brief       Lib ²Ù×÷Flash»Øµ÷
+ * @brief       Lib ï¿½ï¿½ï¿½ï¿½Flashï¿½Øµï¿½
  *
  * input parameters
  *
@@ -104,7 +104,7 @@ void test( uint8_t code, uint32_t status ){
 /*******************************************************************************
  * @fn          CH57X_BLEInit
  *
- * @brief       BLE ¿â³õÊ¼»¯
+ * @brief       BLE ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
  *
  * input parameters
  *
@@ -135,7 +135,7 @@ void CH57X_BLEInit( void )
   cfg.TxNumEvent = ( u32 ) BLE_TX_NUM_EVENT;
   cfg.TxPower = ( u32 ) BLE_TX_POWER;
 #if (defined (BLE_SNV)) && (BLE_SNV == TRUE)
-  FLASH_ROM_LOCK( 0 );                    // ½âËøflash
+  FLASH_ROM_LOCK( 0 );                    // ï¿½ï¿½ï¿½ï¿½flash
 
   if(device_mode == MODE_BLE)
   if(device_bond.ID_Num == 0) {
@@ -160,14 +160,14 @@ void CH57X_BLEInit( void )
   cfg.ConnectNumber = ( PERIPHERAL_MAX_CONNECTION & 3 ) | ( CENTRAL_MAX_CONNECTION << 2 );
   cfg.srandCB = SYS_GetSysTickCnt;
 #if (defined TEM_SAMPLE)  && (TEM_SAMPLE == TRUE)
-  cfg.tsCB = HAL_GetInterTempValue;    // ¸ù¾ÝÎÂ¶È±ä»¯Ð£×¼RFºÍÄÚ²¿RC( ´óÓÚ7ÉãÊÏ¶È )
+  cfg.tsCB = HAL_GetInterTempValue;    // ï¿½ï¿½ï¿½ï¿½ï¿½Â¶È±ä»¯Ð£×¼RFï¿½ï¿½ï¿½Ú²ï¿½RC( ï¿½ï¿½ï¿½ï¿½7ï¿½ï¿½ï¿½Ï¶ï¿½ )
 #if( CLK_OSC32K )
-  cfg.rcCB = Lib_Calibration_LSI;    // ÄÚ²¿32KÊ±ÖÓÐ£×¼
+  cfg.rcCB = Lib_Calibration_LSI;    // ï¿½Ú²ï¿½32KÊ±ï¿½ï¿½Ð£×¼
 #endif
 #endif
 #if (defined (HAL_SLEEP)) && (HAL_SLEEP == TRUE)
   cfg.WakeUpTime = WAKE_UP_RTC_MAX_TIME;
-  cfg.sleepCB = CH58X_LowPower;    // ÆôÓÃË¯Ãß
+  cfg.sleepCB = CH58X_LowPower;    // ï¿½ï¿½ï¿½ï¿½Ë¯ï¿½ï¿½
 #endif
 #if (defined (BLE_MAC)) && (BLE_MAC == TRUE)
   /* four mac */
@@ -240,7 +240,7 @@ static void HAL_ProcessTMOSMsg( tmos_event_hdr_t *pMsg )
 /*******************************************************************************
  * @fn          HAL_ProcessEvent
  *
- * @brief       Ó²¼þ²ãÊÂÎñ´¦Àí
+ * @brief       Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  *
  * input parameters
  *
@@ -257,7 +257,7 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
 {
   uint8 * msgPtr;
   if ( events & SYS_EVENT_MSG )
-  {    // ´¦ÀíHAL²ãÏûÏ¢£¬µ÷ÓÃtmos_msg_receive¶ÁÈ¡ÏûÏ¢£¬´¦ÀíÍê³ÉºóÉ¾³ýÏûÏ¢¡£
+  {    // ï¿½ï¿½ï¿½ï¿½HALï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tmos_msg_receiveï¿½ï¿½È¡ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½É¾ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
     msgPtr = tmos_msg_receive( task_id );
     if ( msgPtr )
     {
@@ -290,19 +290,19 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
         };
         set_rf_status(&temp_sta);
 
-        tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //ÎÞ¼üÖµ±ä»¯30sË¯Ãß
-        tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //ÎÞ¼üÖµ±ä»¯30sË¯Ãß
+        tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //ï¿½Þ¼ï¿½Öµï¿½ä»¯30sË¯ï¿½ï¿½
+        tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //ï¿½Þ¼ï¿½Öµï¿½ä»¯30sË¯ï¿½ï¿½
         switch(device_mode){
         case MODE_BLE:
-            OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, 1, NULL);
+            OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
             break;
 
         case MODE_RF24:
-            OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, 1, NULL);
+            OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, notify, NULL);
             break;
 
         case MODE_USB:
-            OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, 1, NULL);
+            OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
             break;
         default:
             break;
@@ -316,10 +316,10 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
 
   if ( events & HAL_REG_INIT_EVENT )
   {
-#if (defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)	// Ð£×¼ÈÎÎñ£¬µ¥´ÎÐ£×¼ºÄÊ±Ð¡ÓÚ10ms
+#if (defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)	// Ð£×¼ï¿½ï¿½ï¿½ñ£¬µï¿½ï¿½ï¿½Ð£×¼ï¿½ï¿½Ê±Ð¡ï¿½ï¿½10ms
     BLE_RegInit();    // Ð£×¼RF
 #if( CLK_OSC32K )	
-    Lib_Calibration_LSI();    // Ð£×¼ÄÚ²¿RC
+    Lib_Calibration_LSI();    // Ð£×¼ï¿½Ú²ï¿½RC
 #endif
     tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );
     return events ^ HAL_REG_INIT_EVENT;
@@ -334,7 +334,7 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
     }
     LOG_INFO("Low power sleep !");
 
-#if( DEBUG == Debug_UART1 )  // Ê¹ÓÃÆäËû´®¿ÚÊä³ö´òÓ¡ÐÅÏ¢ÐèÒªÐÞ¸ÄÕâÐÐ´úÂë
+#if( DEBUG == Debug_UART1 )  // Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
       while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
       {
         __nop();
@@ -353,7 +353,7 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
       return events ^ HAL_SHUTDOWN_EVENT;
     }
       LOG_INFO("Low power shut down!");
-#if( DEBUG == Debug_UART1 )  // Ê¹ÓÃÆäËû´®¿ÚÊä³ö´òÓ¡ÐÅÏ¢ÐèÒªÐÞ¸ÄÕâÐÐ´úÂë
+#if( DEBUG == Debug_UART1 )  // Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
   while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
   {
     __nop();
@@ -379,24 +379,24 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
     GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_Floating);
     for(uint8_t i = 0; i < 20; i++ )
     {
-      adcsum += ADC_ExcutSingleConver();      // Á¬Ðø²ÉÑù20´Î
+      adcsum += ADC_ExcutSingleConver();      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½20ï¿½ï¿½
     }
     GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_PU);
     uint32_t adcavg = adcsum/20;
     LOG_INFO("adc avg: %d", adcavg);
 
 #define MIN_BATTERY_VOL         2.5
-#define ADC_THRESHOLD (MIN_BATTERY_VOL*2048/1.05)  //µÍÓÚ2.5VË¯Ãß
+#define ADC_THRESHOLD (MIN_BATTERY_VOL*2048/1.05)  //ï¿½ï¿½ï¿½ï¿½2.5VË¯ï¿½ï¿½
 
     if(adcavg < (uint32_t)ADC_THRESHOLD) {
       LOG_INFO("battery low...");
-#if( DEBUG == Debug_UART1 )  // Ê¹ÓÃÆäËû´®¿ÚÊä³ö´òÓ¡ÐÅÏ¢ÐèÒªÐÞ¸ÄÕâÐÐ´úÂë
+#if( DEBUG == Debug_UART1 )  // Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ï¢ï¿½ï¿½Òªï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
       while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
       __nop();
 #endif
       tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, MS1_TO_SYSTEM_TIME(10));
     }
-    tmos_start_task( halTaskID, HAL_ADC_EVENT, MS1_TO_SYSTEM_TIME(60*1000 ) );   //1min ¼ì²âÒ»´Î
+    tmos_start_task( halTaskID, HAL_ADC_EVENT, MS1_TO_SYSTEM_TIME(60*1000 ) );   //1min ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
     return events ^ HAL_ADC_EVENT;
   }
 
@@ -423,8 +423,8 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
     OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, 1, NULL);
 
 
-//    OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, 1, NULL);
-//    OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, 1, NULL);
+//    OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
+//    OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
 
     tmos_start_task( halTaskID, HAL_TEST_EVENT, MS1_TO_SYSTEM_TIME(1000));
     return events ^ HAL_TEST_EVENT;
@@ -435,7 +435,7 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
 /*******************************************************************************
  * @fn          HAL_Init
  *
- * @brief       Ó²¼þ³õÊ¼»¯
+ * @brief       Ó²ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
  *
  * input parameters
  *
@@ -458,8 +458,8 @@ void HAL_Init()
 
 #if (defined HAL_SLEEP) && (HAL_SLEEP == TRUE)
   HAL_SleepInit();
-  tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //ÎÞ¼üÖµ±ä»¯30sË¯Ãß
-  tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //ÎÞ¼üÖµ±ä»¯5minË¯Ãß
+  tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //ï¿½Þ¼ï¿½Öµï¿½ä»¯30sË¯ï¿½ï¿½
+  tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //ï¿½Þ¼ï¿½Öµï¿½ä»¯5minË¯ï¿½ï¿½
 #endif
 
 #if (defined HAL_LED) && (HAL_LED == TRUE)
@@ -472,16 +472,16 @@ void HAL_Init()
 #endif
 
 #if ( defined BLE_CALIBRATION_ENABLE ) && ( BLE_CALIBRATION_ENABLE == TRUE )
-  tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );    // Ìí¼ÓÐ£×¼ÈÎÎñ£¬µ¥´ÎÐ£×¼ºÄÊ±Ð¡ÓÚ10ms
+  tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );    // ï¿½ï¿½ï¿½Ð£×¼ï¿½ï¿½ï¿½ñ£¬µï¿½ï¿½ï¿½Ð£×¼ï¿½ï¿½Ê±Ð¡ï¿½ï¿½10ms
 #endif
 
-//  tmos_start_task( halTaskID, HAL_TEST_EVENT, 1600 );    // Ìí¼ÓÒ»¸ö²âÊÔÈÎÎñ
+//  tmos_start_task( halTaskID, HAL_TEST_EVENT, 1600 );    // ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 /*******************************************************************************
  * @fn          HAL_GetInterTempValue
  *
- * @brief       Èç¹ûÊ¹ÓÃÁËADCÖÐ¶Ï²ÉÑù£¬ÐèÔÚ´Ëº¯ÊýÖÐÔÝÊ±ÆÁ±ÎÖÐ¶Ï.
+ * @brief       ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ADCï¿½Ð¶Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½.
  *
  * input parameters
  *

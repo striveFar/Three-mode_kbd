@@ -8,6 +8,7 @@
 #include "backlight/backlight.h"
 #include "RF_PHY/rf_pair.h"
 #include "RF_PHY/rf_process.h"
+#include "../../../drivers/tmk_core/common/report.h"
 
 tmosTaskID RFtaskID;
 
@@ -64,18 +65,16 @@ int rf_tx_deal(void)
 
     lwrb_peek(&KEY_buff, 0, &report_id, 1);
 
-    if(report_id == KEYNORMAL_ID) {
-        key_len= 8;
-    } else if( report_id == KEYBIT_ID ){
-        key_len = 16;
+    if(report_id == KEYNORMAL_ID || report_id == KEYBIT_ID) {
+        key_len= KEYBOARD_REPORT_SIZE;
     } else if (report_id == SYS_ID) {
-        key_len = 2;
+        key_len = sizeof(uint16_t);
     } else if(report_id == CONSUME_ID){
-        key_len = 2;
+        key_len = sizeof(uint16_t);
     } else if(report_id == VENDOR_ID){
 //        key_len = 2;
     } else if(report_id == MOUSE_ID){
-        key_len = 4;
+        key_len = sizeof(report_mouse_t);
     } else {
         /* should not be here */
         LOG_DEBUG("report id error!");

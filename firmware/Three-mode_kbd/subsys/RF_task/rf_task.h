@@ -9,6 +9,7 @@ extern "C"
 #include <stdint.h>
 #include <stdbool.h>
 #include "CONFIG.h"
+#include "../../../drivers/tmk_core/common/report.h"
 
 #define PAIR_EVENT                  0x0001
 #define RF_SEND_EVENT               0x0002
@@ -20,7 +21,7 @@ typedef struct __attribute__((__packed__))
 {
     uint8_t len;
     uint8_t report_id;
-    uint8_t data[16];
+    uint8_t data[KEYBOARD_REPORT_SIZE]; //use the max len
 }rf_data_t;
 
 extern tmosTaskID RFtaskID;

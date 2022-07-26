@@ -5,6 +5,7 @@
 #include "RingBuffer/lwrb.h"
 #include "HAL/HAL.h"
 #include "backlight/backlight.h"
+#include "../../../drivers/tmk_core/common/report.h"
 /*********************************************************************
  * GLOBAL TYPEDEFS
  */
@@ -415,94 +416,86 @@ bool DevEPn_IN_Deal(void) {
         USBDevWakeup();
     }
 
-    uint8_t report_id;
+    uint8_t report_id, key_len;
+
     lwrb_peek(&KEY_buff, 0, &report_id, 1);
 
-    if(report_id == KEYNORMAL_ID) {
-        if(!(EpnInFlag & 1<<0)) return true;
-        lwrb_skip(&KEY_buff, 1);
-        lwrb_read(&KEY_buff, EP1_Databuf+64, 8);
-
-        PRINT("key normal IN:[");
-        for(int i = 0; i < 8; i++){
-            if(i) PRINT(" ");
-            PRINT("%#x", EP2_Databuf[64+i]);
-        }PRINT("]\n");
-
-        PFIC_DisableIRQ(USB_IRQn);
-        EpnInFlag &= ~(1 << 0);
-        R8_UEP1_T_LEN = 8;
-        R8_UEP1_CTRL = (R8_UEP1_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
-        PFIC_EnableIRQ(USB_IRQn);
-    } else if( report_id == KEYBIT_ID ){        //bit mdoe
-        if(!(EpnInFlag & 1<<1)) return true;
-        lwrb_skip(&KEY_buff, 1);
-        lwrb_read(&KEY_buff, EP2_Databuf+64, 16);
-
-        EP2_Databuf[64] = KEYBIT_ID;
-        PFIC_DisableIRQ(USB_IRQn);
-        EpnInFlag &= ~(1 << 1);
-        R8_UEP2_T_LEN = 16;
-        R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
-        PFIC_EnableIRQ(USB_IRQn);
+    if (report_id == KEYNORMAL_ID || report_id == KEYBIT_ID) {
+        key_len = KEYBOARD_REPORT_SIZE;
     } else if (report_id == SYS_ID) {
-        if(!(EpnInFlag & 1<<1)) return true;
-        lwrb_skip(&KEY_buff, 1);
-        lwrb_read(&KEY_buff, EP2_Databuf+64+1, 2);
-        EP2_Databuf[64] = SYS_ID;
-
-        PRINT("SYS ID IN:[");
-        for(int i = 0; i < 3; i++){
-            if(i) PRINT(" ");
-            PRINT("%#x", EP2_Databuf[64+i]);
-        }PRINT("]\n");
-
-        PFIC_DisableIRQ(USB_IRQn);
-        EpnInFlag &= ~(1 << 1);
-        R8_UEP2_T_LEN = 3;
-        R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
-        PFIC_EnableIRQ(USB_IRQn);
-    } else if(report_id == CONSUME_ID){
-        if(!(EpnInFlag & 1<<1)) return true;
-        lwrb_skip(&KEY_buff, 1);
-        lwrb_read(&KEY_buff, EP2_Databuf+64+1, 2);
-        EP2_Databuf[64] = CONSUME_ID;
-
-        PRINT("CONSUME_ID IN:[");
-        for(int i = 0; i < 3; i++){
-            if(i) PRINT(" ");
-            PRINT("%#x", EP2_Databuf[64+i]);
-        }PRINT("]\n");
-
-        PFIC_DisableIRQ(USB_IRQn);
-        EpnInFlag &= ~(1 << 1);
-        R8_UEP2_T_LEN = 3;
-        R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
-        PFIC_EnableIRQ(USB_IRQn);
-    }else if (report_id == VENDOR_ID) {
-
-    }else if (report_id == MOUSE_ID) {
-        if(!(EpnInFlag & 1<<1)) return true;
-        lwrb_skip(&KEY_buff, 1);
-        lwrb_read(&KEY_buff, EP2_Databuf+64+1, 4);
-        EP2_Databuf[64] = MOUSE_ID;
-
-        PRINT("MOUSE_ID IN:[");
-        for(int i = 0; i < 4; i++){
-            if(i) PRINT(" ");
-            PRINT("%#x", EP2_Databuf[64+i]);
-        }PRINT("]\n");
-
-        PFIC_DisableIRQ(USB_IRQn);
-        EpnInFlag &= ~(1 << 1);
-        R8_UEP2_T_LEN = 5;
-        R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
-        PFIC_EnableIRQ(USB_IRQn);
+        key_len = sizeof(uint16_t);
+    } else if (report_id == CONSUME_ID) {
+        key_len = sizeof(uint16_t);
+    } else if (report_id == VENDOR_ID) {
+        //        key_len = 2;
+    } else if (report_id == MOUSE_ID) {
+        key_len = sizeof(report_mouse_t);
     } else {
         /* should not be here */
         LOG_DEBUG("report id error!");
+        lwrb_reset(&KEY_buff);
     }
+
+    if (report_id == KEYNORMAL_ID) {
+        if (!(EpnInFlag & 1 << 0))
+            return true;
+    } else {
+        if (!(EpnInFlag & 1 << 1))
+            return true;
+    }
+
+    lwrb_skip(&KEY_buff, 1);
+    lwrb_read(&KEY_buff, EP1_Databuf + 64, key_len);
+
+#ifdef DEBUG
+    switch (report_id) {
+    case KEYNORMAL_ID:
+        PRINT("USB keyboard IN:[");
+        break;
+    case KEYBIT_ID:
+        PRINT("USB KEYBIT_ID IN:[");
+        break;
+    case SYS_ID:
+        PRINT("USB SYS ID IN:[");
+        break;
+    case CONSUME_ID:
+        PRINT("USB CONSUME_ID IN:[");
+        break;
+    case VENDOR_ID:
+        PRINT("USB VENDOR_ID IN:[");
+        break;
+    case MOUSE_ID:
+        PRINT("USB MOUSE_ID IN:[");
+        break;
+    default:
+        LOG_DEBUG("USB :report id does not exist!");
+        /* 唯一的限制是 goto 只能跳转到同一个函数中的某个标号处。 */
+        goto err_out;
+
+    }
+    for (int i = 0; i < key_len; i++) {
+        if (i)
+            PRINT(" ");
+        PRINT("%#x", EP2_Databuf[64 + i]);
+    }
+    PRINT("]\n");
+    err_out:
+#endif
+
+    PFIC_DisableIRQ(USB_IRQn);
+    if (report_id == KEYNORMAL_ID) {
+        EpnInFlag &= ~(1 << 0);
+        R8_UEP1_T_LEN = key_len;
+        R8_UEP1_CTRL = (R8_UEP1_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
+    } else {
+        EpnInFlag &= ~(1 << 1);
+        R8_UEP2_T_LEN = key_len;
+        R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK;
+    }
+    PFIC_EnableIRQ(USB_IRQn);
+
     return !!lwrb_get_full(&KEY_buff);
+
 }
 
 void USBDevWakeup(void)

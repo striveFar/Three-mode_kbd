@@ -10,6 +10,7 @@
 
 #include "../StdPeriphDriver/inc/CH58x_common.h"
 
+ extern volatile uint32_t systick_millis;
 /**
   * @brief  rtc interrupt event define
   */

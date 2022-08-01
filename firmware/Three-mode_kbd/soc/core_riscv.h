@@ -262,11 +262,11 @@ RV_STATIC_INLINE void PFIC_SystemReset(void){
 
 
 #define SysTick_LOAD_RELOAD_Msk            (0xFFFFFFFFFFFFFFFF)
-#define SysTick_CRTL_INIT_Msk              (1 << 5)
-#define SysTick_CRTL_COUNTMODE_Msk         (1 << 4)
-#define SysTick_CTRL_CLKSOURCE_Msk         (1 << 2)
-#define SysTick_CTRL_TICKINT_Msk           (1 << 1)
-#define SysTick_CTRL_ENABLE_Msk            (1 << 0)
+#define SysTick_CRTL_INIT_Msk              (1 << 5) //向上计数从 0 开始，向下计数从比较值开始
+#define SysTick_CRTL_COUNTMODE_Msk         (1 << 4) //向下计数
+#define SysTick_CTRL_CLKSOURCE_Msk         (1 << 2) //计数器时钟源选择：HCLK 做时基
+#define SysTick_CTRL_TICKINT_Msk           (1 << 1) //使能计数器中断
+#define SysTick_CTRL_ENABLE_Msk            (1 << 0) //启动系统计数器 STK
 
 
 RV_STATIC_INLINE uint32_t SysTick_Config( UINT64 ticks ){
@@ -278,7 +278,7 @@ RV_STATIC_INLINE uint32_t SysTick_Config( UINT64 ticks ){
                    SysTick_CRTL_COUNTMODE_Msk |
                    SysTick_CTRL_CLKSOURCE_Msk |
                    SysTick_CTRL_TICKINT_Msk   |
-                   (1<<3)|
+                   (1<<3)|                                     /* 向下计数到 0 之后从比较值开始向下计数 */
                    SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
   return (0);                                                  /* Function successful */
 }

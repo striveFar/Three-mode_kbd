@@ -88,7 +88,7 @@ int main(void)
 
     host_set_driver(&consumer_host_driver);
     //TODO
-    //keyboard_init();
+    keyboard_init();
 
     /*DataFlash≥ı ºªØ*/
     if (easyflash_init() != SUCCESS) {

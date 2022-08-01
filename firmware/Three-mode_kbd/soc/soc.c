@@ -361,7 +361,7 @@ void NMI_Handler( void )
   CODE_UNREACHABLE;
 }
 
-volatile static uint32_t systick_millis = 0;
+volatile uint32_t systick_millis = 0;
 
 __attribute__((section(".highcode")))
 void SysTick_Handler(void) {
@@ -369,7 +369,7 @@ void SysTick_Handler(void) {
     SysTick->SR &= ~(1 << 0);
 }
 
-
+/*开机systick,单位毫秒*/
 unsigned long millis(void)
 {
     return systick_millis;
@@ -411,6 +411,7 @@ void mDelayuS( UINT16 t )
 #endif
     do
     {
+        /* 一条__nop()指令需要4个时钟周期 */
     	__nop();
     }while(--i);
 }

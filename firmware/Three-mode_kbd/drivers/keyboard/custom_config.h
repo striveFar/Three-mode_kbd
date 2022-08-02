@@ -36,6 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 9   // Strobe
 #define MATRIX_COLS 7   // Sense
 
+#ifndef DEBOUNCE
+#define DEBOUNCE    5
+#endif
+
 /* key combination for command */
 #define IS_COMMAND() (keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)))
 

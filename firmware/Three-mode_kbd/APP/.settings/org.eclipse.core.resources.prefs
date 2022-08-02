@@ -37,4 +37,4 @@ encoding//subsys/HAL/LED.c=GBK
 encoding//subsys/HAL/LED.h=GBK
 encoding//subsys/HAL/MCU.c=UTF-8
 encoding//subsys/HAL/RTC.c=GBK
-encoding/<project>=UTF-8
+encoding//test/test_dtm.c=GBK

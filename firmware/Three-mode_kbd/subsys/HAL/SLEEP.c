@@ -47,7 +47,8 @@ extern uint8_t USB_sus_status;
   }
 
   if(device_mode == MODE_USB && USB_sus_status){
-      RstAllPins();
+      /* TODO £º revert*/
+      //RstAllPins();
       usb_disable();
       LowPower_Shutdown(0);
   }

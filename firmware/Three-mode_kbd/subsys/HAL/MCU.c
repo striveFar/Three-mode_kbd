@@ -268,167 +268,167 @@ tmosEvents HAL_ProcessEvent( tmosTaskID task_id, tmosEvents events )
     return events ^ SYS_EVENT_MSG;
   }
 
-  if ( events & LED_BLINK_EVENT )
-  {
-#if (defined HAL_LED) && (HAL_LED == TRUE)
-    HalLedUpdate( );
-#endif // HAL_LED
-    return events ^ LED_BLINK_EVENT;
-  }
+//  if ( events & LED_BLINK_EVENT )
+//  {
+//#if (defined HAL_LED) && (HAL_LED == TRUE)
+//    HalLedUpdate( );
+//#endif // HAL_LED
+//    return events ^ LED_BLINK_EVENT;
+//  }
 
-  if ( events & HAL_KEY_EVENT )
-  {
-#if (defined HAL_KEY) && (HAL_KEY == TRUE)
-//     LOG_INFO("KEY start: %d", millis());
+//  if ( events & HAL_KEY_EVENT )
+//  {
+//#if (defined HAL_KEY) && (HAL_KEY == TRUE)
+////     LOG_INFO("KEY start: %d", millis());
+//
+//    if(readKeyVal()){
+//        LOG_INFO("key!");
+//        is_idle = false;
+//        struct rf_status_t temp_sta = {
+//                .dongle_lost = 0,
+//                .idle = 1,
+//        };
+//        set_rf_status(&temp_sta);
+//
+//        tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //�޼�ֵ�仯30s˯��
+//        tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //�޼�ֵ�仯30s˯��
+//        switch(device_mode){
+//        case MODE_BLE:
+//            OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
+//            break;
+//
+//        case MODE_RF24:
+//            OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, notify, NULL);
+//            break;
+//
+//        case MODE_USB:
+//            OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
+//            break;
+//        default:
+//            break;
+//        }
+//    }
+////    LOG_INFO("KEY end: %d", millis());
+//    tmos_start_task( halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(10) );
+//    return events ^ HAL_KEY_EVENT;
+//#endif
+//  }
 
-    if(readKeyVal()){
-        LOG_INFO("key!");
-        is_idle = false;
-        struct rf_status_t temp_sta = {
-                .dongle_lost = 0,
-                .idle = 1,
-        };
-        set_rf_status(&temp_sta);
-
-        tmos_start_task(halTaskID, HAL_SLEEP_EVENT, LOW_POWER_SLEEP_TIME_S);  //�޼�ֵ�仯30s˯��
-        tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, LOW_POWER_SHUTDOWN_TIME_S);  //�޼�ֵ�仯30s˯��
-        switch(device_mode){
-        case MODE_BLE:
-            OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
-            break;
-
-        case MODE_RF24:
-            OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, notify, NULL);
-            break;
-
-        case MODE_USB:
-            OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
-            break;
-        default:
-            break;
-        }
-    }
-//    LOG_INFO("KEY end: %d", millis());
-    tmos_start_task( halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(10) );
-    return events ^ HAL_KEY_EVENT;
-#endif
-  }
-
-  if ( events & HAL_REG_INIT_EVENT )
-  {
-#if (defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)	// У׼���񣬵���У׼��ʱС��10ms
-    BLE_RegInit();    // У׼RF
-#if( CLK_OSC32K )	
-    Lib_Calibration_LSI();    // У׼�ڲ�RC
-#endif
-    tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );
-    return events ^ HAL_REG_INIT_EVENT;
-#endif
-  }
-
-  if ( events & HAL_SLEEP_EVENT )
-  {
-
-    if(device_mode == MODE_USB){
-      return events ^ HAL_SLEEP_EVENT;
-    }
-    LOG_INFO("Low power sleep !");
-
-#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
-      while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
-      {
-        __nop();
-      }
-#endif
-
-#if HAL_SLEEP
-    is_idle = true;
-#endif
-    return events ^ HAL_SLEEP_EVENT;
-  }
-
-  if ( events & HAL_SHUTDOWN_EVENT )
-  {
-    if(device_mode == MODE_USB){
-      return events ^ HAL_SHUTDOWN_EVENT;
-    }
-      LOG_INFO("Low power shut down!");
-#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
-  while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
-  {
-    __nop();
-  }
-#endif
-#if HAL_SLEEP
-      RstAllPins();;
-      LowPower_Shutdown(0);
-#endif
-    return events ^ HAL_SHUTDOWN_EVENT;
-  }
-
-
-  if(events & HAL_ADC_EVENT) {
-    static bool is_adc_init = FALSE;
-    if(!is_adc_init) {
-      ADC_ExtSingleChSampInit( SampleFreq_3_2, ADC_PGA_0 );
-      ADC_ChannelCfg( 3 );
-      is_adc_init = TRUE;
-    }
-
-    uint32_t adcsum = 0;
-    GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_Floating);
-    for(uint8_t i = 0; i < 20; i++ )
-    {
-      adcsum += ADC_ExcutSingleConver();      // ��������20��
-    }
-    GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_PU);
-    uint32_t adcavg = adcsum/20;
-    LOG_INFO("adc avg: %d", adcavg);
-
-#define MIN_BATTERY_VOL         2.5
-#define ADC_THRESHOLD (MIN_BATTERY_VOL*2048/1.05)  //����2.5V˯��
-
-    if(adcavg < (uint32_t)ADC_THRESHOLD) {
-      LOG_INFO("battery low...");
-#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
-      while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
-      __nop();
-#endif
-      tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, MS1_TO_SYSTEM_TIME(10));
-    }
-    tmos_start_task( halTaskID, HAL_ADC_EVENT, MS1_TO_SYSTEM_TIME(60*1000 ) );   //1min ���һ��
-    return events ^ HAL_ADC_EVENT;
-  }
-
-
-
-  if ( events & HAL_TEST_EVENT )
-  {
-#include "RingBuffer/lwrb.h"
-
-    PRINT( "*\n" );
-    static uint8_t buf[8] = {0};
-
-    static bool flag = false;
-    uint8_t report_id = 0;
-
-    struct rf_status_t temp_sta = {
-            .dongle_lost = 0,
-            .idle = 1,
-    };
-    set_rf_status(&temp_sta);
-
-    lwrb_write(&KEY_buff, &report_id, 1);
-    lwrb_write(&KEY_buff, buf, 8);
-    OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, 1, NULL);
-
-
-//    OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
-//    OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
-
-    tmos_start_task( halTaskID, HAL_TEST_EVENT, MS1_TO_SYSTEM_TIME(1000));
-    return events ^ HAL_TEST_EVENT;
-  }
+//  if ( events & HAL_REG_INIT_EVENT )
+//  {
+//#if (defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)	// У׼���񣬵���У׼��ʱС��10ms
+//    BLE_RegInit();    // У׼RF
+//#if( CLK_OSC32K )
+//    Lib_Calibration_LSI();    // У׼�ڲ�RC
+//#endif
+//    tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );
+//    return events ^ HAL_REG_INIT_EVENT;
+//#endif
+//  }
+//
+//  if ( events & HAL_SLEEP_EVENT )
+//  {
+//
+//    if(device_mode == MODE_USB){
+//      return events ^ HAL_SLEEP_EVENT;
+//    }
+//    LOG_INFO("Low power sleep !");
+//
+//#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
+//      while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
+//      {
+//        __nop();
+//      }
+//#endif
+//
+//#if HAL_SLEEP
+//    is_idle = true;
+//#endif
+//    return events ^ HAL_SLEEP_EVENT;
+//  }
+//
+//  if ( events & HAL_SHUTDOWN_EVENT )
+//  {
+//    if(device_mode == MODE_USB){
+//      return events ^ HAL_SHUTDOWN_EVENT;
+//    }
+//      LOG_INFO("Low power shut down!");
+//#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
+//  while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
+//  {
+//    __nop();
+//  }
+//#endif
+//#if HAL_SLEEP
+//      RstAllPins();;
+//      LowPower_Shutdown(0);
+//#endif
+//    return events ^ HAL_SHUTDOWN_EVENT;
+//  }
+//
+//
+//  if(events & HAL_ADC_EVENT) {
+//    static bool is_adc_init = FALSE;
+//    if(!is_adc_init) {
+//      ADC_ExtSingleChSampInit( SampleFreq_3_2, ADC_PGA_0 );
+//      ADC_ChannelCfg( 3 );
+//      is_adc_init = TRUE;
+//    }
+//
+//    uint32_t adcsum = 0;
+//    GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_Floating);
+//    for(uint8_t i = 0; i < 20; i++ )
+//    {
+//      adcsum += ADC_ExcutSingleConver();      // ��������20��
+//    }
+//    GPIOA_ModeCfg(GPIO_Pin_13, GPIO_ModeIN_PU);
+//    uint32_t adcavg = adcsum/20;
+//    LOG_INFO("adc avg: %d", adcavg);
+//
+//#define MIN_BATTERY_VOL         2.5
+//#define ADC_THRESHOLD (MIN_BATTERY_VOL*2048/1.05)  //����2.5V˯��
+//
+//    if(adcavg < (uint32_t)ADC_THRESHOLD) {
+//      LOG_INFO("battery low...");
+//#if( DEBUG == Debug_UART1 )  // ʹ���������������ӡ��Ϣ��Ҫ�޸����д���
+//      while( ( R8_UART1_LSR & RB_LSR_TX_ALL_EMP ) == 0 )
+//      __nop();
+//#endif
+//      tmos_start_task(halTaskID, HAL_SHUTDOWN_EVENT, MS1_TO_SYSTEM_TIME(10));
+//    }
+//    tmos_start_task( halTaskID, HAL_ADC_EVENT, MS1_TO_SYSTEM_TIME(60*1000 ) );   //1min ���һ��
+//    return events ^ HAL_ADC_EVENT;
+//  }
+//
+//
+//
+//  if ( events & HAL_TEST_EVENT )
+//  {
+//#include "RingBuffer/lwrb.h"
+//
+//    PRINT( "*\n" );
+//    static uint8_t buf[8] = {0};
+//
+//    static bool flag = false;
+//    uint8_t report_id = 0;
+//
+//    struct rf_status_t temp_sta = {
+//            .dongle_lost = 0,
+//            .idle = 1,
+//    };
+//    set_rf_status(&temp_sta);
+//
+//    lwrb_write(&KEY_buff, &report_id, 1);
+//    lwrb_write(&KEY_buff, buf, 8);
+//    OnBoard_SendMsg(RFtaskID, KEY_MESSAGE, 1, NULL);
+//
+//
+////    OnBoard_SendMsg(hidEmuTaskId, KEY_MESSAGE, notify, NULL);
+////    OnBoard_SendMsg(USBTaskID, KEY_MESSAGE, notify, NULL);
+//
+//    tmos_start_task( halTaskID, HAL_TEST_EVENT, MS1_TO_SYSTEM_TIME(1000));
+//    return events ^ HAL_TEST_EVENT;
+//  }
   return 0;
 }
 
@@ -466,10 +466,10 @@ void HAL_Init()
   bkinit();
 #endif
 
-#if (defined HAL_KEY) && (HAL_KEY == TRUE)
-  keyInit();
-  tmos_start_task( halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(10) );
-#endif
+//#if (defined HAL_KEY) && (HAL_KEY == TRUE)
+//  keyInit();
+//  tmos_start_task( halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(10) );
+//#endif
 
 #if ( defined BLE_CALIBRATION_ENABLE ) && ( BLE_CALIBRATION_ENABLE == TRUE )
   tmos_start_task( halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME( BLE_CALIBRATION_PERIOD ) );    // ���У׼���񣬵���У׼��ʱС��10ms

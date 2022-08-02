@@ -4,11 +4,10 @@
 #include "timer.h"
 #include "wait.h"
 #include "matrix.h"
+#include "custom_config.h"
 
 
-#ifndef DEBOUNCE
-#define DEBOUNCE    5
-#endif
+
 
 /*
  * Infinity Pinusage:

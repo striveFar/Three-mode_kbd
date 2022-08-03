@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "CH58x_common.h"
 
 #if 0
 // duplicated name against mbed USBDeivce
@@ -33,12 +34,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /* matrix size */
+//#define MATRIX_ROWS 6   // Strobe
+//#define MATRIX_COLS 17   // Sense
+
 #define MATRIX_ROWS 9   // Strobe
 #define MATRIX_COLS 7   // Sense
 
 #ifndef DEBOUNCE
 #define DEBOUNCE    5
 #endif
+
+//static const uint8_t row_pin_array[MATRIX_ROWS] = { PA0, PA1, PA2, PA3, PA4, PA5 };
+//
+//static const uint8_t column_pin_array[MATRIX_COLS] = { PA8, PB4, PB5, PB6, PB7, PB8, PB9, PB14,
+//        PB15, PB16, PB17, PB18, PB19, PB20, PB21, PB22, PB23 };
+
+static const uint8_t row_pin_array[MATRIX_ROWS] = { PA0, PA1, PA2, PA3, PA4, PA5, PA8, PB4, PB5,};
+
+static const uint8_t column_pin_array[MATRIX_COLS] = { PB6, PB7, PB8, PB9, PB14,
+        PB15, PB16 };
 
 /* key combination for command */
 #define IS_COMMAND() (keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)))

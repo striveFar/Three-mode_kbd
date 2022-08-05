@@ -417,7 +417,8 @@ void register_code(uint8_t code)
 
     else if IS_KEY(code) {
         // TODO: should push command_proc out of this block?
-        if (command_proc(code)) return;
+        /* TODO: remove*/
+        //if (command_proc(code)) return;
 
 #ifndef NO_ACTION_ONESHOT
 /* TODO: remove

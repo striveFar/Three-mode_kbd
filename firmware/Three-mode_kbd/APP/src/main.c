@@ -42,6 +42,7 @@ void Main_Circulation() {
     while (1) {
         rf_tx_process();
         TMOS_SystemProcess();
+        keyboard_task();
     }
 }
 

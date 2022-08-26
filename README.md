@@ -1,4 +1,5 @@
 # Three-mode keyboard
+## note：以下为原版说明，移植tmk_core后原版的按键扫描流程相关功能就弃用了
 
 [TOC]
 
